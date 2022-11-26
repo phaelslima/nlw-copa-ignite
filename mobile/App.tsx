@@ -1,7 +1,8 @@
-import { Center, NativeBaseProvider, StatusBar, Text } from 'native-base'
+import { NativeBaseProvider, StatusBar } from 'native-base'
 import { useFonts, Roboto_400Regular, Roboto_500Medium, Roboto_700Bold } from '@expo-google-fonts/roboto'
 
 import { Loading } from './src/components/Loading'
+import { SignIn } from './src/screens/SignIn'
 
 import { THEME } from './src/styles/theme'
 
@@ -16,9 +17,7 @@ export default function App() {
         translucent
       />
 
-      <Center flex={1} bg="gray.900">
-        {fontsLoaded ? <Text>Hello world!</Text> : <Loading />}
-      </Center>
+      {fontsLoaded ? <SignIn /> : <Loading />}
     </NativeBaseProvider>
   )
 }
