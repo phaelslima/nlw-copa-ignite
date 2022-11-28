@@ -50,6 +50,12 @@ async function bootstrap() {
     return { count: usersCount }
   })
 
+  fastify.get('/guesses/count', async () => {
+    const guessesCount = await prisma.guess.count()
+
+    return { count: guessesCount }
+  })
+
   await fastify.listen({ port: 3333, host: '0.0.0.0' })
 }
 
