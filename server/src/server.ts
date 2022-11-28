@@ -44,6 +44,12 @@ async function bootstrap() {
     return reply.status(201).send({ code })
   })
 
+  fastify.get('/users/count', async () => {
+    const usersCount = await prisma.user.count()
+
+    return { count: usersCount }
+  })
+
   await fastify.listen({ port: 3333, host: '0.0.0.0' })
 }
 
