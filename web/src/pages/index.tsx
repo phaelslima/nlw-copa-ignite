@@ -1,6 +1,8 @@
 import { GetStaticProps } from 'next'
+import { FormEvent, useState } from 'react'
 
 import Image from 'next/image'
+import Toast from 'react-hot-toast'
 
 import { api } from '../lib/axios'
 
@@ -16,6 +18,26 @@ interface HomeProps {
 }
 
 export default function Home({ pollCount, guessCount, userCount }: HomeProps) {
+	const [pollTitle, setPollTitle] = useState('')
+
+	async function handleCreatePoll(event: FormEvent) {
+		event.preventDefault()
+
+		try {
+			const { data } = await api.post('/polls', {
+				title: pollTitle
+			})
+
+			await navigator.clipboard.writeText(data)
+
+			Toast.success('Bolão criado com sucesso! Código copiado para a área de transferência.')
+
+			setPollTitle('')
+		} catch(e) {
+			Toast.error('Falha ao criar o bolão, tente novamente!')
+		}
+	}
+
   return (
     <div className="max-w-[1124px] h-screen mx-auto grid grid-cols-2 items-center gap-28">
 			<main>
@@ -31,12 +53,17 @@ export default function Home({ pollCount, guessCount, userCount }: HomeProps) {
 					</strong>
 				</div>
 
-				<form className="mt-10 flex gap-2">
+				<form
+					onSubmit={handleCreatePoll} 
+					className="mt-10 flex gap-2"
+				>
 					<input
 						type="text"
 						required
 						placeholder="Qual nome do seu bolão?"
 						className="flex-1 py-4 px-6 rounded bg-gray-800 border border-gray-600 text-sm text-gray-100"
+						onChange={e => setPollTitle(e.target.value)}
+						value={pollTitle}
 					/>
 
 					<button
