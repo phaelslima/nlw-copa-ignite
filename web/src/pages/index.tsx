@@ -1,11 +1,21 @@
+import { GetStaticProps } from 'next'
+
 import Image from 'next/image'
+
+import { api } from '../lib/axios'
 
 import logoImage from '../assets/logo.svg'
 import mobileImage from '../assets/app-nlw-copa-preview.png'
 import avatarsImage from '../assets/users-avatar-example.png'
 import iconCheck from '../assets/icon-check.svg'
 
-export default function Home() {
+interface HomeProps {
+	pollCount: number
+	guessCount: number
+	userCount: number
+}
+
+export default function Home({ pollCount, guessCount, userCount }: HomeProps) {
   return (
     <div className="max-w-[1124px] h-screen mx-auto grid grid-cols-2 items-center gap-28">
 			<main>
@@ -17,7 +27,7 @@ export default function Home() {
 					<Image src={avatarsImage} alt="" />
 
 					<strong className="text-gray-100 text-xl">
-						<span className="text-ignite-500">+12.592</span> pessoas já estão usando
+						<span className="text-ignite-500">+{userCount}</span> pessoas já estão usando
 					</strong>
 				</div>
 
@@ -46,7 +56,7 @@ export default function Home() {
 						<Image src={iconCheck} alt="" />
 
 						<div className="flex flex-col">
-							<span className="font-bold text-2xl">+2.034</span>
+							<span className="font-bold text-2xl">+{pollCount}</span>
 							<span>Bolões criados</span>
 						</div>
 					</div>
@@ -55,7 +65,7 @@ export default function Home() {
 						<Image src={iconCheck} alt="" />
 
 						<div className="flex flex-col">
-							<span className="font-bold text-2xl">+192.847</span>
+							<span className="font-bold text-2xl">+{guessCount}</span>
 							<span>Palpites enviados</span>
 						</div>
 					</div>
@@ -69,4 +79,21 @@ export default function Home() {
 			/>
 		</div>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+	const [pollCount, guessCount, userCount] = await Promise.all([
+		api.get('polls/count'),
+		api.get('guesses/count'),
+		api.get('users/count')
+	])
+
+	return {
+		props: {
+			pollCount: pollCount.data.count,
+			guessCount: guessCount.data.count,
+			userCount: userCount.data.count
+		},
+		revalidate: 10
+	}
 }
