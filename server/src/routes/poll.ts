@@ -152,4 +152,53 @@ export async function pollRoutes(fastify: FastifyInstance) {
       return { polls }
     }
   )
+
+  fastify.get(
+    '/polls/:id',
+    {
+      onRequest: [authenticate],
+    },
+    async (request) => {
+      const getPollParamas = z.object({
+        id: z.string(),
+      })
+
+      const { id } = getPollParamas.parse(request.params)
+
+      const poll = await prisma.poll.findUnique({
+        where: {
+          id,
+        },
+        include: {
+          _count: {
+            select: {
+              participants: true,
+            },
+          },
+
+          participants: {
+            select: {
+              id: true,
+
+              user: {
+                select: {
+                  avatarURL: true,
+                },
+              },
+            },
+            take: 4,
+          },
+
+          owner: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      })
+
+      return { poll }
+    }
+  )
 }
