@@ -3,6 +3,7 @@ import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import jwt from '@fastify/jwt'
 
+import { authRoutes } from './routes/auth'
 import { gameRoutes } from './routes/game'
 import { guessRoutes } from './routes/guess'
 import { pollRoutes } from './routes/poll'
@@ -21,6 +22,7 @@ async function bootstrap() {
     secret: 'nlwcopa',
   })
 
+  await fastify.register(authRoutes)
   await fastify.register(gameRoutes)
   await fastify.register(guessRoutes)
   await fastify.register(pollRoutes)
