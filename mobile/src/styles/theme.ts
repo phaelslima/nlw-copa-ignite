@@ -35,6 +35,8 @@ export const THEME = extendTheme({
     xl: 24,
   },
   sizes: {
+    6: 24,
     14: 56,
+    22: 87,
   },
 })
