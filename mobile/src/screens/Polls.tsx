@@ -1,11 +1,11 @@
 import { FlatList, Icon, useToast, VStack } from 'native-base'
 import { Octicons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 
 import { Button } from '../components/Button'
 import { Header } from '../components/Header'
 import { api } from '../libs/axios'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { PollCard, PollCardPros } from '../components/PollCard'
 import { EmptyPollList } from '../components/EmptyPollList'
@@ -38,9 +38,11 @@ export function Polls() {
     }
   }
 
-  useEffect(() => {
-    fetchPolls()
-  }, [])
+  useFocusEffect(useCallback(
+    () => {
+      fetchPolls()
+    }, []
+  ))
 
   return (
     <VStack flex={1} bgColor="gray.900">
