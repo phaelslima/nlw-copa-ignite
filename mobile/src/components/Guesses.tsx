@@ -5,12 +5,14 @@ import { api } from '../libs/axios';
 
 import { GameProps, Game } from './Game';
 import { Loading } from './Loading';
+import { EmptyMyPollList } from './EmptyMyPollList';
 
 interface Props {
   pollId: string
+  code: string
 }
 
-export function Guesses({ pollId }: Props) {
+export function Guesses({ pollId, code }: Props) {
   const toast = useToast()
 
   const [games, setGames] = useState<GameProps[]>([])
@@ -98,6 +100,7 @@ export function Guesses({ pollId }: Props) {
         />
       )}
       _contentContainerStyle={{ pb: 10 }}
+      ListEmptyComponent={() => <EmptyMyPollList code={code} />}
     />
   )
 }
